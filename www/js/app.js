@@ -3,9 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -15,70 +13,111 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
     }
     if(window.StatusBar) {
-      // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
   });
 })
 
+
 .config(function($stateProvider, $urlRouterProvider) {
-
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
   $stateProvider
-
-    // setup an abstract state for the tabs directive
-    .state('tab', {
-      url: "/tab",
+    .state('tabs', {
+      url: '/tab',
       abstract: true,
-      templateUrl: "templates/tabs.html"
+      templateUrl: 'templates/tabs.html'
     })
 
-    // Each tab has its own nav history stack:
-
-    .state('tab.dash', {
-      url: '/dash',
+    .state('tabs.home', {
+      url: '/home',
       views: {
-        'tab-dash': {
-          templateUrl: 'templates/tab-dash.html',
-          controller: 'DashCtrl'
+        'home-tab' : {
+          templateUrl: 'templates/home.html'
         }
       }
     })
 
-    .state('tab.friends', {
-      url: '/friends',
+    .state('tabs.list', {
+      url: '/list',
       views: {
-        'tab-friends': {
-          templateUrl: 'templates/tab-friends.html',
-          controller: 'FriendsCtrl'
-        }
-      }
-    })
-    .state('tab.friend-detail', {
-      url: '/friend/:friendId',
-      views: {
-        'tab-friends': {
-          templateUrl: 'templates/friend-detail.html',
-          controller: 'FriendDetailCtrl'
+        'list-tab' : {
+          templateUrl: 'templates/list.html',
+          controller: 'ListController'
         }
       }
     })
 
-    .state('tab.account', {
-      url: '/account',
+    .state('tabs.detail', {
+      url: '/list/:aId',
       views: {
-        'tab-account': {
-          templateUrl: 'templates/tab-account.html',
-          controller: 'AccountCtrl'
+        'list-tab' : {
+          templateUrl: 'templates/detail.html',
+          controller: 'ListController'
         }
       }
+    })
+
+    .state('tabs.calendar', {
+      url: '/calendar',
+      views: {
+        'calendar-tab' : {
+          templateUrl: 'templates/calendar.html',
+          controller: 'CalendarController'
+        }
+      }
+    })
+
+
+  $urlRouterProvider.otherwise('/tab/home');
+})
+
+.controller('CalendarController', ['$scope', '$http', '$state',
+    function($scope, $http, $state) {
+    $http.get('js/data.json').success(function(data) {
+      $scope.calendar = data.calendar;
+
+      $scope.onItemDelete = function(dayIndex, item) {
+        $scope.calendar[dayIndex].schedule.splice($scope.calendar[dayIndex].schedule.indexOf(item), 1);
+      }
+
+      $scope.doRefresh =function() {
+      $http.get('js/data.json').success(function(data) {
+          $scope.calendar = data.calendar;
+          $scope.$broadcast('scroll.refreshComplete');
+        });
+      }
+
+      $scope.toggleStar = function(item) {
+        item.star = !item.star;
+      }
+
     });
+}])
 
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+.controller('ListController', ['$scope', '$http', '$state',
+    function($scope, $http, $state) {
+    $http.get('js/data.json').success(function(data) {
+      $scope.activities = data.activities;
+      $scope.whichactivity=$state.params.aId;
+      $scope.data = { showDelete: false, showReorder: false };
 
-});
+      $scope.onItemDelete = function(item) {
+        $scope.activities.splice($scope.activities.indexOf(item), 1);
+      }
 
+      $scope.doRefresh =function() {
+      $http.get('js/data.json').success(function(data) {
+          $scope.activities = data;
+          $scope.$broadcast('scroll.refreshComplete'); 
+        });
+      }
+
+      $scope.toggleStar = function(item) {
+        item.star = !item.star;
+      }
+
+      $scope.moveItem = function(item, fromIndex, toIndex) {
+        $scope.activities.splice(fromIndex, 1);
+        $scope.activities.splice(toIndex, 0, item);
+      };
+    });
+}]);
