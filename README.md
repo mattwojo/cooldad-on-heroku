@@ -1,9 +1,13 @@
-ionic-heroku-button
+Cool Dad
 ===================
+A simple app concept to help busy dads also be cool dads.
 
-A one-click Ionic app template for Heroku
+Built with Ionic / Angular / Express / Node.js
 
-## Deploying locally
+
+Deployed using [ionic-heroku-button](https://github.com/driftyco/ionic-heroku-button).
+
+### To deploy locally
 
 Make sure you have [Node.js](http://nodejs.org/) and the [Heroku Toolbelt](https://toolbelt.heroku.com/) installed.
 
@@ -14,9 +18,9 @@ npm install
 npm start
 ```
 
-Your app should now be running on [localhost:5000](http://localhost:5000/).
+App should now run on [localhost:5000](http://localhost:5000/).
 
-## Deploying to Heroku
+### To deploy to Heroku
 
 ```
 heroku create
@@ -24,10 +28,4 @@ git push heroku master
 heroku open
 ```
 
-Alternatively, you can deploy your own copy of the app using this button:
-
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
-
-## Documentation
-
-For more information about using Heroku, check out https://devcenter.heroku.com/
+[Heroku documentation](https://devcenter.heroku.com/)
