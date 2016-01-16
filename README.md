@@ -1,6 +1,6 @@
 Cool Dad
 ===================
-A simple app concept to help busy dads also be cool dads.
+A simple app concept to help busy dads also be cool dads. Visit the live site: [http://cooldad.herokuapp.com/](http://cooldad.herokuapp.com/)
 
 Built with Ionic / Angular / Express / Node.js
 
